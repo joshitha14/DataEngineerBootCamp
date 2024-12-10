@@ -1,0 +1,61 @@
+-- This file is notes for the lecture Dimensional Data Modeling Overview - 
+Key Concepts
+    -Complex Data Types: 
+        - Struct: Similar to a table within a table, used for organizing related data.
+        - Array: A list in a column, useful for compact data representation . 
+    - Dimensions: Attributes of an entity, such as a person's birthday or favorite food. They can be categorized as:
+        - Identifier Dimensions: Uniquely identify an entity (e.g., user ID, device ID) . 
+        - Attributes: Provide additional information but are not critical for identification. They can be:
+        - Slowly Changing Dimensions: Attributes that change over time (e.g., favorite food) . 
+        - Fixed Dimensions: Attributes that do not change (e.g., birthday) .
+
+Data Modeling Types
+    - OLTP (Online Transaction Processing): Focuses on transaction-oriented applications, emphasizing data normalization and minimizing duplication . 
+    - OLAP (Online Analytical Processing): Optimized for query performance, allowing for fast data retrieval without extensive joins . 
+    - Master Data: Serves as a middle ground between OLTP and OLAP, providing a complete and normalized view of data for analytical purposes . 
+
+Cumulative Table Design
+    - Cumulative tables maintain a complete history of dimensions, allowing for the tracking of changes over time. They are created by performing a full outer join between today's and yesterday's data tables .
+
+Trade-offs in Data Modeling
+    - Compactness vs. Usability: Using complex data types can lead to more compact datasets but may complicate querying . 
+    - Empathy in Data Modeling: Understanding the needs of data consumers (analysts, engineers, customers) is crucial for effective data modeling . 
+
+Important Considerations
+    - Temporal Cardinality Explosion: A phenomenon that can occur when modeling dimensions with time-dependent attributes .
+    - Run Length Encoding: A powerful method for data compression, particularly in big data contexts . 
+
+
+Cumulative Table Design
+
+    - Full Outer Join: This technique is used to merge data from two different time periods (e.g., yesterday and today) to capture all records, even if they exist in only one of the datasets. This allows for a comprehensive view of user activity over time . 
+    - Historical Data Tracking: The cumulative table design is essential for maintaining historical user activity data. For instance, Facebook utilized a table called "Dim All Users" to track user activity daily, which helped in analyzing user engagement metrics . 
+    - State Transition Tracking: This involves categorizing user activity states (e.g., churned, resurrected, new) based on their activity from one day to the next. This method allows for detailed analysis of user behavior transitions . 
+    - Cumulative Metrics: By holding onto historical data, analysts can compute various metrics, such as the duration since a user was last active. This can be done by incrementing a counter for inactive days . 
+    - Data Pruning: To manage the size of the cumulative table, it is important to remove inactive users after a certain period (e.g., 180 days of inactivity) to maintain efficiency .
+    - Cumulative Table Design Process: The design involves using two data frames (yesterday's and today's data) to build a comprehensive view. The process includes performing a full outer join, coalescing user IDs, and computing cumulative metrics . 
+
+Strengths and Drawbacks of Cumulative Table Design
+
+    - Strengths:
+        - Enables historical analysis without the need for complex group by operations, as all data is stored in a single row . 
+        - Facilitates scalable queries on historical data, which can often be slow when querying daily data .  
+    - Drawbacks:
+        - Backfilling data can only be done sequentially, which may slow down the process compared to parallel backfilling of daily data . 
+        - Managing personally identifiable information (PII) can become complex, requiring additional filtering to remove inactive or deleted users . 
+
+Compactness vs. Usability Trade-off
+
+    - Usability: Usable tables are straightforward and easy to query, often favored by analysts . 
+    - Compactness: Compact tables minimize data storage but can be difficult to work with analytically. They often require decompression and decoding .
+    - Middle Ground: Using complex data types like arrays and structs can provide a balance between usability and compactness, allowing for efficient data modeling.
+
+Data Structures
+
+    - Structs: These are like tables within tables, allowing for different data types for keys and values 
+    - Maps: Maps require all values to be of the same type, which can lead to casting issues 
+    - Arrays: Arrays are suitable for ordered datasets, and they can contain structs or maps as elements 
+
+Run Length Encoding: This technique compresses data by storing the value and the count of consecutive duplicates, which is particularly useful for temporal data 
+
+Data Sorting and Joins: Maintaining the order of data during joins is crucial for effective compression. If sorting is disrupted, it can lead to larger data sets than expected. Using arrays can help preserve sorting during joins.
