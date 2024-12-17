@@ -1,0 +1,30 @@
+Two important modeling concepts introduced critical to ensure data consistency & quality of your pipelines. 
+
+➊ Idempotency
+The ability of a data pipeline to produce the same results regardless of the date, time or how many times you run it.
+
+❌ Don'ts:
+→ Running INSERT without TRUNCATE = hi duplicates
+→ Missing END_DATE in time windows = pipeline chaos
+→ Skipping partition sensors = playing with fire
+
+✅ Do's:
+→ MERGE statements & window controls = best friends
+
+-------------------------------------------------------------
+
+➋ Slow Changing Dimensions (SDC)
+Attributes that drift over time (ie. age, weight,...) for which you can track change history when modelled with the right type.
+
+❌ Don'ts:
+→ Type 1: tempting, but destroys historical accuracy
+→ Type 3: a trap. Loses critical history between values
+
+✅ Do's:
+→ Type 2 with START_DATE/END_DATE tracking
+→ Tip: an IS_CURRENT column = debugging lifesaver
+
+
+🧠 Final thoughts:
+1. Idempotency: not a feature but an insurance policy to your pipeline.
+2. SCDs: type 2 looks complex, but it's your insurance policy to a peaceful night sleep.
